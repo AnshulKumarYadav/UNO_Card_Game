@@ -11,6 +11,7 @@ public class Game {
 	private List<Player> players;
 	private Deck deck = new Deck();
 	private Player currPlayer;
+	private Deck remaingCardsDeck = new Deck();
 	private boolean isGameEnded = false;
 
 	public void createPlayers(List<String> playerNames) {
@@ -49,10 +50,13 @@ public class Game {
 
 	public Card drawCard() {
 		List<Card> cards = deck.getCards();
+		List<Card> remCards = remaingCardsDeck.getCards();
 		if (!cards.isEmpty()) {
+			remCards.add(cards.get(cards.size()-1));
+			remaingCardsDeck.setCards(remCards);
 			return cards.remove(cards.size() - 1);
 		} else {
-			System.out.println("Deck is empty");
+			cards = remCards;
 			return null;
 		}
 	}
