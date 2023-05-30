@@ -149,7 +149,7 @@ public class Game {
 				System.out.println("Action: ");
 				String actionString = scanner.next();
 				Optional<Card> cardOptional = currPlayer.getCards().stream().filter(p -> p.getValue() == v
-						&& p.getAction().equals(actionString) && p.getColor().equals(colorString)).findAny();
+						&& p.getAction().equals(Action.valueOf(actionString)) && p.getColor().equals(Color.valueOf(colorString))).findAny();
 				if (cardOptional.isPresent()) {
 					List<Card> currCards = currPlayer.getCards();
 					currCards.remove(cardOptional.get());
