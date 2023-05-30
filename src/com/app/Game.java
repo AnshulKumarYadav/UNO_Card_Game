@@ -65,31 +65,49 @@ public class Game {
 		}
 		declareWinner();
 	}
-
+	
 	public void handleTurn(Card card) {
-		if(card==null) return;
-		System.out.println(currPlayer.getPlayerName() + "'s turn");
-		
-		System.out.println("Current card: " + card);
-		Optional<Card> playableCard = currPlayer.getCards().stream()
-				.filter(c -> c.getValue().equals(card.getValue()) || c.getColor().equals(card.getColor())).findFirst();
+	    if (card == null) return;
+	    Scanner scanner = new Scanner(System.in);
+	    System.out.println(currPlayer.getPlayerName() + "'s turn");
+	    System.out.println("Current card: " + card);
 
-		if (playableCard.isPresent()) {
-			Card selectedCard = playableCard.get();
-			currPlayer.getCards().remove(selectedCard);
-			System.out.println(currPlayer.getPlayerName() + " played " + selectedCard);
-			handleCardAction(selectedCard);
-		} else {
-			System.out.println(currPlayer.getPlayerName() + " couldn't play a card. Drawing a card...");
-			Card drawnCard = drawCard();
-			if (drawnCard != null) {
-				currPlayer.getCards().add(drawnCard);
-				System.out.println(currPlayer.getPlayerName() + " drew a card: " + drawnCard);
-			}
-		}
+	    System.out.println(currPlayer.getPlayerName()+" cards:");
+	    System.out.println("***************************");
+	    int cardIndex = 1;
+	    for (Card c : currPlayer.getCards()) {
+	        System.out.println(cardIndex + " ---> " + c);
+	        cardIndex++;
+	    }
+	    System.out.println("***************************");
+	    System.out.println();
+	    System.out.print("Choose a card number to play (or enter 0 to draw a card): ");
+	    int choice = scanner.nextInt();
+	    if (choice == 0) {
+	        System.out.println(currPlayer.getPlayerName() + " couldn't play a card. Drawing a card...");
+	        Card drawnCard = drawCard();
+	        if (drawnCard != null) {
+	            currPlayer.getCards().add(drawnCard);
+	            System.out.println(currPlayer.getPlayerName() + " drew a card: " + drawnCard);
+	        }
+	    } else if (choice >= 1 && choice <= currPlayer.getCards().size()) {
+	        Card selectedCard = currPlayer.getCards().get(choice - 1);
+	        if (selectedCard.getValue().equals(card.getValue()) || selectedCard.getColor().equals(card.getColor())) {
+	            currPlayer.getCards().remove(selectedCard);
+	            System.out.println(currPlayer.getPlayerName() + " played " + selectedCard);
+	            handleCardAction(selectedCard);
+	        } else {
+	            System.out.println("Invalid card selection. Try again.");
+	            handleTurn(card);
+	        }
+	    } else {
+	        System.out.println("Invalid choice. Try again.");
+	        handleTurn(card);
+	    }
 
-		currPlayer = getNextPlayer();
+	    currPlayer = getNextPlayer();
 	}
+
 
 	public void handleCardAction(Card card) {
 		if(deck==null) return;
